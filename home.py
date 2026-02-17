@@ -46,7 +46,9 @@ def display_home():
 			st.warning("No data found in query output.")
 	except Exception as e:
 		st.error(f"Failed to parse query.py output: {e}")
-		st.code(query_result.stdout)
+		st.code("STDOUT:\n" + query_result.stdout)
+		st.code("STDERR:\n" + query_result.stderr)
+		st.code(f"Return code: {query_result.returncode}")
 	st.markdown("---")
 	if st.button("Run History Script"):
 		result = subprocess.run(["python", "scripts/history.py"], capture_output=True, text=True)
