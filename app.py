@@ -20,6 +20,7 @@ Dependencies:
 
 
 import streamlit as st
+import subprocess
 import yaml
 import streamlit_authenticator as stauth
 
@@ -33,6 +34,8 @@ import plotly.graph_objects as go
 from BatteryPercentage import display_battery_percentage
 from BatteryCharge import display_battery_charge
 from BatterySummary import display_battery_summary
+from MeterPower import display_meter_power
+from TotalPowerExport import display_total_power_export
 
 
 
@@ -308,14 +311,13 @@ def display_battery_dashboard():
 
 
 
-# Main content area - conditionally render based on authentication and menu selection
 if st.session_state.get("authentication_status"):
     # Sidebar configuration with menu options - only show when authenticated
     with st.sidebar:
         selected = option_menu(
             "Main Menu",
-            ["Home", "Battery Percentage", "Battery Charge", "Battery Summary", "Settings"],
-            icons=["house", "percent", "battery", "bar-chart", "gear"],
+            ["Home", "Battery Percentage", "Battery Charge", "Battery Summary", "Meter Power", "Total Power Export", "Settings"],
+            icons=["house", "percent", "battery", "bar-chart", "plug", "upload", "gear"],
             menu_icon="cast",
             default_index=0,
             key="menu_selection"
@@ -327,13 +329,23 @@ if st.session_state.get("authentication_status"):
         st.header("Home Dashboard")
         st.write("This is the home page. Here you can view real-time inverter data, charts, and system status.")
         # TODO: Add home page content - import and display data from main.py logic
+        st.markdown("---")
+        if st.button("Run History Script"):
+            result = subprocess.run(["python", "scripts/history.py"], capture_output=True, text=True)
+            st.rerun()
     elif selected == "Battery Percentage":
         display_battery_percentage()
     elif selected == "Battery Charge":
         display_battery_charge()
     elif selected == "Battery Summary":
         display_battery_summary()
-    elif selected == "Settings":
+    elif selected == "Meter Power":
+        display_meter_power()
+    elif selected == "Total Power Export":
+        display_total_power_export()
+
+
+    if selected == "Settings":
         st.header("Settings")
         st.write("Configure system parameters, thresholds, and preferences.")
         # TODO: Add settings page content - forms for updating config.yaml or main.py parameters

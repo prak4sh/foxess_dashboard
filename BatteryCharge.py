@@ -5,7 +5,7 @@ import glob
 import os
 
 def display_battery_charge():
-    st.text("🔋 Battery Charge & Discharge Power (Hourly Average)")
+    # st.text("🔋 Battery Charge & Discharge Power (Hourly Average)")
     history_folder = "history"
     csv_files = glob.glob(os.path.join(history_folder, "foxess_history_*.csv"))
     if not csv_files:
@@ -67,7 +67,7 @@ def display_battery_charge():
             fillcolor='rgba(255, 111, 97, 0.15)'
         ))
         fig_power.update_layout(
-            # title="Battery Charge & Discharge Power (Hourly Average)",
+            title="Battery Charge & Discharge Power (Hourly Average)",
             xaxis_title="Time (Hourly)",
             yaxis_title="Power (kW)",
             height=500,
