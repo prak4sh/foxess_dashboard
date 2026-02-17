@@ -5,6 +5,7 @@ This module provides functions for retrieving and processing historical data
 from the FoxESS API, specifically for inverter monitoring and analysis.
 """
 
+
 import hashlib
 import time
 import requests
@@ -15,6 +16,9 @@ import pytz
 import os
 from rich import print
 import re
+
+# Use Streamlit secrets for sensitive config
+import streamlit as st
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -33,13 +37,14 @@ except ImportError:
     # Fall back to absolute import (when run directly as script)
     from utils import get_signature, get_headers, get_sydney_timestamps
 
+
 # API Configuration
 DOMAIN = "https://www.foxesscloud.com"
 LANG = "en"
 
-# Configuration - Replace with your actual values
-API_KEY = "aecaf763-372f-4aa6-8ab6-33f95ce1a3fe"  # Get from FoxESS personal center -> API Management
-INVERTER_SN = "60KB1030617A448"  # Your inverter's serial number
+# Load sensitive config from Streamlit secrets
+API_KEY = st.secrets["API_KEY"]
+INVERTER_SN = st.secrets["INVERTER_SN"]
 
 
 def get_device_history_data(api_key: str, inverter_sn: str, variables: list = None,
