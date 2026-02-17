@@ -19,15 +19,6 @@ import re
 
 # Use Streamlit secrets for sensitive config
 import streamlit as st
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
-
-import os
-
-API_KEY = os.getenv("API_KEY")
-INVERTER_SN = os.getenv("INVERTER_SN")
 
 # Handle imports for both direct execution and module import
 try:

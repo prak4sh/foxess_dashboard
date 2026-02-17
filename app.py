@@ -21,6 +21,8 @@ Dependencies:
 
 import streamlit as st
 import subprocess
+import json
+from home import display_home
 import yaml
 import streamlit_authenticator as stauth
 
@@ -326,13 +328,7 @@ if st.session_state.get("authentication_status"):
         authenticator.logout("Logout", "sidebar")
     # Render content based on selected menu option
     if selected == "Home":
-        st.header("Home Dashboard")
-        st.write("This is the home page. Here you can view real-time inverter data, charts, and system status.")
-        # TODO: Add home page content - import and display data from main.py logic
-        st.markdown("---")
-        if st.button("Run History Script"):
-            result = subprocess.run(["python", "scripts/history.py"], capture_output=True, text=True)
-            st.rerun()
+        display_home()
     elif selected == "Battery Percentage":
         display_battery_percentage()
     elif selected == "Battery Charge":
