@@ -18,30 +18,40 @@ Dependencies:
 - PyYAML: YAML configuration file handling
 """
 
+
 import streamlit as st
-from streamlit_option_menu import option_menu
-import streamlit_authenticator as stauth
-
 import yaml
-from yaml.loader import SafeLoader
+import streamlit_authenticator as stauth
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
-from datetime import datetime, timedelta
-import os
+from streamlit_option_menu import option_menu
 import glob
+import os
 
-# Load authentication configuration from YAML file
-config_file_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
-with open(config_file_path) as file:
-    config = yaml.load(file, Loader=SafeLoader)
 
-# Initialize authenticator with configuration
+
+# Recursively convert all nested secrets to standard dicts
+def to_dict(obj):
+    if isinstance(obj, dict):
+        return {k: to_dict(v) for k, v in obj.items()}
+    elif hasattr(obj, 'items'):
+        return {k: to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [to_dict(i) for i in obj]
+    else:
+        return obj
+
+credentials = to_dict(st.secrets["credentials"])
+
+cookie_key = st.secrets["cookie_key"]
+cookie_name = st.secrets.get("cookie_name", "foxess_dashboard_cookie")
+expiry_days = int(st.secrets.get("expiry_days", 30))
+
 authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days']
+    credentials,
+    cookie_name,
+    cookie_key,
+    expiry_days
 )
 
 # Attempt user login
