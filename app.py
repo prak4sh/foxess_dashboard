@@ -22,11 +22,17 @@ Dependencies:
 import streamlit as st
 import yaml
 import streamlit_authenticator as stauth
+
 import pandas as pd
-import plotly.graph_objects as go
 from streamlit_option_menu import option_menu
+
 import glob
 import os
+import plotly.graph_objects as go
+# Import battery page modules
+from BatteryPercentage import display_battery_percentage
+from BatteryCharge import display_battery_charge
+from BatterySummary import display_battery_summary
 
 
 
@@ -59,18 +65,6 @@ try:
     authenticator.login()
 except Exception as e:
     st.error(e)
-
-def on_change(key):
-    """
-    Callback function for menu selection changes.
-    Displays the selected menu option.
-
-    Args:
-        key (str): The session state key for the menu selection
-    """
-    selection = st.session_state[key]
-    st.write(f"Selection changed to {selection}")
-
 
 def display_battery_dashboard():
     """
@@ -313,33 +307,32 @@ def display_battery_dashboard():
         st.info("Make sure the history folder contains valid CSV files with 'time' and 'SoC' columns.")
 
 
+
 # Main content area - conditionally render based on authentication and menu selection
 if st.session_state.get("authentication_status"):
     # Sidebar configuration with menu options - only show when authenticated
     with st.sidebar:
-        selected = option_menu("Main Menu", ["Home", "Battery", 'Settings'], 
-            icons=['house', 'battery-half', 'gear'], menu_icon="cast", default_index=0, on_change=on_change, key="menu_selection")
-        
+        selected = option_menu(
+            "Main Menu",
+            ["Home", "Battery Percentage", "Battery Charge", "Battery Summary", "Settings"],
+            icons=["house", "percent", "battery", "bar-chart", "gear"],
+            menu_icon="cast",
+            default_index=0,
+            key="menu_selection"
+        )
         # Logout button using authenticator's built-in logout
         authenticator.logout("Logout", "sidebar")
-
-    # Display welcome message for authenticated users
-    st.title("FoxESS Inverter Dashboard")
-    st.write(f"Welcome, {st.session_state['name']}!")
-
     # Render content based on selected menu option
     if selected == "Home":
         st.header("Home Dashboard")
         st.write("This is the home page. Here you can view real-time inverter data, charts, and system status.")
         # TODO: Add home page content - import and display data from main.py logic
-
-    elif selected == "Battery":
-        st.header("🔋 Battery Dashboard")
-        st.write("Monitor your battery state of charge (SoC) over time.")
-
-        # Load and display battery data
-        display_battery_dashboard()
-
+    elif selected == "Battery Percentage":
+        display_battery_percentage()
+    elif selected == "Battery Charge":
+        display_battery_charge()
+    elif selected == "Battery Summary":
+        display_battery_summary()
     elif selected == "Settings":
         st.header("Settings")
         st.write("Configure system parameters, thresholds, and preferences.")
