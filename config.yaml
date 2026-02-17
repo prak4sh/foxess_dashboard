@@ -1,0 +1,21 @@
+cookie:
+  expiry_days: 30
+  key: foxess_dashboard_secret_key_2024_change_this_random_string
+  name: foxess_dashboard_cookie
+credentials:
+  usernames:
+    jsmith:
+      email: jsmith@gmail.com
+      failed_login_attempts: 0 # Will be managed automatically
+      first_name: John
+      last_name: Smith
+      logged_in: False # Will be managed automatically
+      password: $2b$12$d4nhX21kNJaxyWu8l1DUMOg1y2/kEWpvr7BSJFgGxyAKJcybdiMza
+    rbriggs:
+      email: rbriggs@gmail.com
+      failed_login_attempts: 0 # Will be managed automatically
+      first_name: Rebecca
+      last_name: Briggs
+      logged_in: False # Will be managed automatically
+      password: $2b$12$quOZWkwzYIsiM/MddodEEuLWcHtXvA.17ka0s1QXfpNw/J1uc.auG
+
