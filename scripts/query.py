@@ -1,4 +1,4 @@
-import streamlit as st
+import os
 import requests
 import json
 try:
@@ -8,8 +8,8 @@ except ImportError:
     # Fall back to absolute import (when run directly as script)
     from utils import get_signature, get_headers, get_sydney_timestamps
 
-API_KEY = st.secrets["API_KEY"]
-INVERTER_SN = st.secrets["INVERTER_SN"]
+API_KEY = os.environ.get("API_KEY")
+INVERTER_SN = os.environ.get("INVERTER_SN")
 DOMAIN = "https://www.foxesscloud.com"
 LANG = "en"
 

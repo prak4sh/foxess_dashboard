@@ -2,11 +2,15 @@ import streamlit as st
 import subprocess
 import json
 import pandas as pd
+import os
 
 def display_home():
 	st.header("Home Dashboard")
 	# Run query.py and parse output
-	query_result = subprocess.run(["python", "scripts/query.py"], capture_output=True, text=True)
+	env = dict(os.environ)
+	env["API_KEY"] = st.secrets["API_KEY"]
+	env["INVERTER_SN"] = st.secrets["INVERTER_SN"]
+	query_result = subprocess.run(["python", "scripts/query.py"], capture_output=True, text=True, env=env)
 	try:
 		query_json = json.loads(query_result.stdout)
 		st.success("Live inverter data fetched successfully.")
