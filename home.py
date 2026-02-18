@@ -1,5 +1,4 @@
 import streamlit as st
-import subprocess
 import json
 import pandas as pd
 import os
@@ -7,12 +6,13 @@ import os
 def display_home():
 	st.header("Home Dashboard")
 	# Run query.py and parse output
-	env = dict(os.environ)
-	env["API_KEY"] = st.secrets["API_KEY"]
-	env["INVERTER_SN"] = st.secrets["INVERTER_SN"]
-	query_result = subprocess.run(["python", "scripts/query.py"], capture_output=True, text=True, env=env)
+	from scripts.query import get_real_query
+
 	try:
-		query_json = json.loads(query_result.stdout)
+		# Set environment variables for API_KEY and INVERTER_SN
+		os.environ["API_KEY"] = st.secrets["API_KEY"]
+		os.environ["INVERTER_SN"] = st.secrets["INVERTER_SN"]
+		query_json = get_real_query()
 		st.success("Live inverter data fetched successfully.")
 		# Display summary info
 		if 'result' in query_json and query_json['result']:
@@ -49,11 +49,9 @@ def display_home():
 		else:
 			st.warning("No data found in query output.")
 	except Exception as e:
-		st.error(f"Failed to parse query.py output: {e}")
-		st.code("STDOUT:\n" + query_result.stdout)
-		st.code("STDERR:\n" + query_result.stderr)
-		st.code(f"Return code: {query_result.returncode}")
+		st.error(f"Failed to get inverter data: {e}")
 	st.markdown("---")
 	if st.button("Run History Script"):
+		import subprocess
 		result = subprocess.run(["python", "scripts/history.py"], capture_output=True, text=True)
 		st.rerun()
